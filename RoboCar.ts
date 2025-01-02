@@ -495,6 +495,6 @@ namespace RoboCar {
     name: "RoboCar",
     description: "",
     icon: "1234.png",  // Pointing to the assets folder  
-};
+}
 
 }
