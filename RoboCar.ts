@@ -491,4 +491,10 @@ namespace RoboCar {
         MotorRun(enMotors.M3, speed3);
         MotorRun(enMotors.M4, speed4);
     }
+    export const manifest = {
+    name: "RoboCar",
+    description: "",
+    icon: "1234.png",  // Pointing to the assets folder  
+};
+
 }
