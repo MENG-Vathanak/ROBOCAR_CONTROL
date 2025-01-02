@@ -1,6 +1,7 @@
 {
     "name": "RoboCar",
-    "description": "",
+    "description": "A library for controlling RoboCar with Makecode",
+    "keyword": ["RoboCar", "4WD"],
     "dependencies": {
         "core": "*",
         "radio": "*",
@@ -23,5 +24,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "blocksprj, tsprj"
+    "preferredEditor": "tsprj"
 }
