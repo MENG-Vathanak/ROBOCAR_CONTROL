@@ -457,7 +457,7 @@ namespace RoboCar {
         led.enable(false)
         
         speed = (speed * 16) * 0.7; // map 255 to 4096
-        if (speed >= 4096 * 0.7 {
+        if (speed >= 4096 * 0.7) {
             speed = 4096 * 0.7
         }
         if (index == 0){

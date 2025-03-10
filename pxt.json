@@ -1,7 +1,6 @@
 {
     "name": "RoboCar",
     "description": "A library for controlling RoboCar with Makecode",
-    "keyword": ["RoboCar", "4WD"],
     "dependencies": {
         "core": "*",
         "radio": "*",
@@ -18,11 +17,15 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "7.0.51",
+        "target": "7.0.57",
         "targetId": "microbit"
     },
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "tsprj",
+    "keyword": [
+        "RoboCar",
+        "4WD"
+    ]
 }
