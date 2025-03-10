@@ -339,6 +339,9 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=180
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo(num: enServo, value: number): void {
+        if(!initialized) {
+            initPCA9685();
+        }
         // 50hz: 20,000 us
         let us = (value * 1800 / 180 + 600); // 0.6 ~ 2.4
         let pwm = us * 4096 / 20000;
@@ -350,6 +353,9 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=270
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo2(num: enServo, value: number): void {
+        if (initialized) {
+            initPCA9685();
+        }
         // 50hz: 20,000 us
         let newvalue = Math.map(value, 0, 270, 0, 180);
         let us = (newvalue * 1800 / 180 + 600); // 0.6 ~ 2.4
