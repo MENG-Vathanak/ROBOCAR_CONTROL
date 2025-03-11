@@ -55,8 +55,8 @@ namespace RoboCar {
         M3 = 9,
         M4 = 0
     }
-    export enum enMovement{
-        forward = 0, 
+    export enum enMovement {
+        forward = 0,
         backward = 1,
         leftSide = 2,
         rightSide = 3,
@@ -107,8 +107,8 @@ namespace RoboCar {
         if (channel < 0 || channel > 15)
             return;
         if (!initialized) {
-        initPCA9685();
-        setFreq(1000);
+            initPCA9685();
+            setFreq(1000);
         }
         let buf = pins.createBuffer(5);
         buf[0] = LED0_ON_L + 4 * channel;
@@ -121,7 +121,7 @@ namespace RoboCar {
     function stopMotor(index: enMotors) {
         setPwm(index, 0, 0);
     }
-    function forward(RoboCarSpeed : number){
+    function forward(RoboCarSpeed: number) {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P9, 0)
         pins.digitalWritePin(DigitalPin.P10, 1)
@@ -206,7 +206,7 @@ namespace RoboCar {
         pins.digitalWritePin(DigitalPin.P13, 0)
         pins.digitalWritePin(DigitalPin.P14, 1)
     }
-    function rotateLeft(RoboCarSpeed: number){
+    function rotateLeft(RoboCarSpeed: number) {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P9, 1)
         pins.digitalWritePin(DigitalPin.P10, 0)
@@ -339,7 +339,7 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=180
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo(num: enServo, value: number): void {
-        if(!initialized) {
+        if (!initialized) {
             initPCA9685();
         }
         // 50hz: 20,000 us
@@ -367,9 +367,9 @@ namespace RoboCar {
     //% speed.min=-255 speed.max=255
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
     export function MotorRun(index: enMotors, speed: number): void {
-        
+
         led.enable(false)
-        speed = (speed * 16)*0.7; // (map 255 to 4096)
+        speed = (speed * 16) * 0.7; // (map 255 to 4096)
         if (speed >= 4096 * 0.7) {
             speed = 4096 * 0.7
         }
@@ -441,7 +441,7 @@ namespace RoboCar {
     //% weight=91
     //% blockGap=50
     export function MotorStopAll(): void {
-        
+
         stopMotor(enMotors.M1);
         stopMotor(enMotors.M2);
         stopMotor(enMotors.M3);
@@ -452,17 +452,17 @@ namespace RoboCar {
     //% weight=93
     //% speed.min=0 speed.max=255
     // % name.fieldEditor="gridpicker" name.fieldOptions.columns=4
-    export function RoboCar_Movement(index : enMovement, speed : number): void{
-        
+    export function RoboCar_Movement(index: enMovement, speed: number): void {
+
         led.enable(false)
-        
+
         speed = (speed * 16) * 0.7; // map 255 to 4096
         if (speed >= 4096 * 0.7) {
             speed = 4096 * 0.7
         }
-        if (index == 0){
+        if (index == 0) {
             forward(speed)
-        } else if (index == 1){
+        } else if (index == 1) {
             backward(speed)
         } else if (index == 2) {
             leftSide(speed)
@@ -470,18 +470,18 @@ namespace RoboCar {
             rightSide(speed)
         } else if (index == 4) {
             rotateRight(speed)
-        }else if (index == 5){
+        } else if (index == 5) {
             rotateLeft(speed)
         } else if (index == 6) {
             forwardLeft(speed)
         } else if (index == 7) {
             forwardRight(speed)
-        } else if (index == 8){
+        } else if (index == 8) {
             backwardLeft(speed)
         } else if (index == 9) {
             backwardRight(speed)
         }
-        
+
     }
     //% blockId=RoboCar_AllMotorRun block="AllMotor|Motor1 speed %speed1|Motor2 speed %speed2|Motor3 speed %speed3|Motor4 speed %speed4"
     //% weight=92
@@ -497,6 +497,4 @@ namespace RoboCar {
         MotorRun(enMotors.M3, speed3);
         MotorRun(enMotors.M4, speed4);
     }
-   
-
 }
