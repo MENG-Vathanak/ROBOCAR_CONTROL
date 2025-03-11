@@ -333,7 +333,7 @@ namespace RoboCar {
             case enMusic.power_down: music.beginMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once); break;
         }
     }
-    //% blockId=RoboCar_Servo block="Servo(180°)|%num|degree %value"
+    //% blockId=RoboCar_Servo block="SERVO(180°)|%num|degree %value"
     //% weight=97
     //% blockGap=10
     //% num.min=1 num.max=4 value.min=0 value.max=180
@@ -347,7 +347,7 @@ namespace RoboCar {
         let pwm = us * 4096 / 20000;
         setPwm(num, 0, pwm);
     }
-    //% blockId=RoboCar_Servo2 block="Servo(270°)|%num|degree %value"
+    //% blockId=RoboCar_Servo2 block="SERVO(270°)|%num|degree %value"
     //% weight=96
     //% blockGap=10
     //% num.min=1 num.max=4 value.min=0 value.max=270
