@@ -6,7 +6,6 @@ namespace RoboCar {
     const SUBADR1 = 0x02
     const SUBADR2 = 0x03
     const SUBADR3 = 0x04
-
     const LED0_ON_L = 0x06
     const LED0_ON_H = 0x07
     const LED0_OFF_L = 0x08
@@ -353,7 +352,7 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=270
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo2(num: enServo, value: number): void {
-        if (initialized) {
+        if (!initialized) {
             initPCA9685();
         }
         // 50hz: 20,000 us
