@@ -107,7 +107,7 @@ namespace RoboCar {
             return;
         if (!initialized) {
             initPCA9685();
-            setFreq(2000);
+            setFreq(1000);
         }
         let buf = pins.createBuffer(5);
         buf[0] = LED0_ON_L + 4 * channel;
