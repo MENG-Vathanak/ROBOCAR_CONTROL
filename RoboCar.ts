@@ -1,4 +1,4 @@
-//% color="#0c6333" weight=20 icon="\uf135"
+//% color="#FFA500" weight=20 icon="\uf135"
 namespace RoboCar {
     const PCA9685_ADD = 0x40
     const MODE1 = 0x00
