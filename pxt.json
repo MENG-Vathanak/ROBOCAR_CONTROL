@@ -1,7 +1,6 @@
 {
     "name": "RoboCar",
     "description": "A library for controlling RoboCar with Makecode",
-    "version" : "1.1.5",
     "dependencies": {
         "core": "*",
         "radio": "*",
