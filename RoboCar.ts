@@ -368,12 +368,12 @@ namespace RoboCar {
     export function MotorRun(index: enMotors, speed: number): void {
 
         led.enable(false)
-        speed = (speed * 16) * 0.8; // (map 255 to 4096)
-        if (speed >= 4096 * 0.8) {
-            speed = 4096 * 0.8
+        speed = (speed * 16) * 0.85; // (map 255 to 4096)
+        if (speed >= 4096 * 0.85) {
+            speed = 4096 * 0.85
         }
-        if (speed <= -(4096 * 0.8)) {
-            speed = -(4096 * 0.8)
+        if (speed <= -(4096 * 0.85)) {
+            speed = -(4096 * 0.85)
         }
         if (index == 0) {
             if (speed > 0) {
@@ -455,9 +455,9 @@ namespace RoboCar {
 
         led.enable(false)
 
-        speed = (speed * 16) * 0.8; // map 255 to 4096
-        if (speed >= 4096 * 0.8) {
-            speed = 4096 * 0.8
+        speed = (speed * 16) * 0.85; // map 255 to 4096
+        if (speed >= 4096 * 0.85) {
+            speed = 4096 * 0.85
         }
         if (index == 0) {
             forward(speed)
