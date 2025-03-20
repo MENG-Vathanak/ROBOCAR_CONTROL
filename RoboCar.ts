@@ -330,6 +330,9 @@ namespace RoboCar {
             case enMusic.jump_down: music.beginMelody(music.builtInMelody(Melodies.JumpDown), MelodyOptions.Once); break;
             case enMusic.power_up: music.beginMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.Once); break;
             case enMusic.power_down: music.beginMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once); break;
+            default:
+                console.error("Invalid music index:", index);
+                break;
         }
     }
     //% blockId=RoboCar_Servo block="SERVO(180°)|%num|degree %value"
@@ -368,12 +371,12 @@ namespace RoboCar {
     export function MotorRun(index: enMotors, speed: number): void {
 
         led.enable(false)
-        speed = (speed * 16) * 0.85; // (map 255 to 4096)
-        if (speed >= 4096 * 0.85) {
-            speed = 4096 * 0.85
+        speed = (speed * 16) * 0.89; // (map 255 to 4096)
+        if (speed >= 4096 * 0.89) {
+            speed = 4096 * 0.89
         }
-        if (speed <= -(4096 * 0.85)) {
-            speed = -(4096 * 0.85)
+        if (speed <= -(4096 * 0.89)) {
+            speed = -(4096 * 0.89)
         }
         if (index == 0) {
             if (speed > 0) {
@@ -455,9 +458,9 @@ namespace RoboCar {
 
         led.enable(false)
 
-        speed = (speed * 16) * 0.85; // map 255 to 4096
-        if (speed >= 4096 * 0.85) {
-            speed = 4096 * 0.85
+        speed = (speed * 16) * 0.89; // map 255 to 4096
+        if (speed >= 4096 * 0.89) {
+            speed = 4096 * 0.89
         }
         if (index == 0) {
             forward(speed)
