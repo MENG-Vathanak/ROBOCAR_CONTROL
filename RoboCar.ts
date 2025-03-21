@@ -330,9 +330,7 @@ namespace RoboCar {
             case enMusic.jump_down: music.beginMelody(music.builtInMelody(Melodies.JumpDown), MelodyOptions.Once); break;
             case enMusic.power_up: music.beginMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.Once); break;
             case enMusic.power_down: music.beginMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once); break;
-            default:
-                console.error("Invalid music index:", index);
-                break;
+            
         }
     }
     //% blockId=RoboCar_Servo block="SERVO(180°)|%num|degree %value"
