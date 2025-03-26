@@ -506,6 +506,9 @@ namespace RoboCar {
         MotorRun(enMotors.M3, speed3);
         MotorRun(enMotors.M4, speed4);
     }
+
+    //% color="#2c3e50" weight=10 
+    //% blockId=sonar_ping block="ping trig %trig|echo %echo|unit %unit"
     export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
         // send pulse
         pins.setPull(trig, PinPullMode.PullNone);
@@ -525,4 +528,3 @@ namespace RoboCar {
         }
     }
 }
-
