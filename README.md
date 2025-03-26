@@ -1,4 +1,4 @@
-![Alt text](https://github.com/MENG-Vathanak/ROBOCAR_CONTROL/blob/master/LOGO.png)
+![Alt text](https://github.com/MENG-Vathanak/ROBOCAR_CONTROL/blob/master/Logo_3.png)
 
 
 > Open this page at [https://github.com/MENG-Vathanak/RoBoCaRR]
