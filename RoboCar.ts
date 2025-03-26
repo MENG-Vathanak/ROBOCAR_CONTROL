@@ -67,8 +67,11 @@ namespace RoboCar {
         backwardRight = 9
     }
     export enum PingUnit {
+        //% block="μs"
         MicroSeconds,
+        //% block="cm"
         Centimeters,
+        //% block="inches"
         Inches
     }
 
@@ -503,8 +506,14 @@ namespace RoboCar {
         MotorRun(enMotors.M3, speed3);
         MotorRun(enMotors.M4, speed4);
     }
-
-    //% color="#FFA500" weight=10 
+    /**
+    * Send a ping and get the echo time (in microseconds) as a result
+    * @param trig trigger pin
+    * @param echo echo pin
+    * @param unit desired conversion unit
+    * @param maxCmDistance maximum distance in centimeters (default is 500)
+    */
+    //% weight=10 
     //% blockId=sonar_ping block="ping trig %trig|echo %echo|unit %unit"
     export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
         // send pulse
