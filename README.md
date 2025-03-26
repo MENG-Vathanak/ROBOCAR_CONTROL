@@ -1,8 +1,8 @@
-![Alt text]([RYA.png](https://github.com/MENG-Vathanak/ROBOCAR_CONTROL/blob/master/RYA.png?raw=true))
+![Alt text](https://github.com/MENG-Vathanak/ROBOCAR_CONTROL/blob/master/RYA.png)
 
 > Open this page at [https://github.com/MENG-Vathanak/RoBoCaRR]
 
-## Use as Extension
+## Use as Extension)
 
 This repository can be added as an **extension** in MakeCode.
 
