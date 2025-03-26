@@ -66,12 +66,9 @@ namespace RoboCar {
         backwardLeft = 8,
         backwardRight = 9
     }
-    enum PingUnit {
-        //% block="μs"
+    export enum PingUnit {
         MicroSeconds,
-        //% block="cm"
         Centimeters,
-        //% block="inches"
         Inches
     }
 
@@ -507,7 +504,7 @@ namespace RoboCar {
         MotorRun(enMotors.M4, speed4);
     }
 
-    //% color="#2c3e50" weight=10 
+    //% color="#FFA500" weight=10 
     //% blockId=sonar_ping block="ping trig %trig|echo %echo|unit %unit"
     export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
         // send pulse
