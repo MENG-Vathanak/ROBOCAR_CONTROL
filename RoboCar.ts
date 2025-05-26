@@ -19,8 +19,8 @@ namespace RoboCar {
     const ALL_LED_OFF_H = 0xFD
 
     const PRESCALE = 0xFE
-    let initializedPCA1 = false
-    let initializedPCA2 = false
+    let initializedPCA1 = false;
+    let initializedPCA2 = false;
 
     let yahStrip: neopixel.Strip;
 
@@ -79,76 +79,67 @@ namespace RoboCar {
         Inches
     }
 
-    function i2cwrite(addr: number, reg: number, value: number) {
-        let buf = pins.createBuffer(2)
-        buf[0] = reg
-        buf[1] = value
-        pins.i2cWriteBuffer(addr, buf)
-    }
-    function i2ccmd(addr: number, value: number) {
-        let buf = pins.createBuffer(1)
-        buf[0] = value
-        pins.i2cWriteBuffer(addr, buf)
-    }
-    function i2cread(addr: number, reg: number) {
-        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
-        let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
-        return val;
-    }
-    function initPCA9685_1(): void {
-        i2cwrite(PCA9685_ADD, MODE1, 0x00)
-        setFreq(1000);
-        initializedPCA1 = true
-    }
 
-      function initPCA9685_2(): void {
-        i2cwrite(PCA9685_ADD_2, MODE1, 0x00)
-        setFreq(50);
-        initializedPCA2 = true
-    }
+function i2cwrite(addr: number, reg: number, value: number) {
+    let buf = pins.createBuffer(2)
+    buf[0] = reg
+    buf[1] = value
+    pins.i2cWriteBuffer(addr, buf)
+}
 
+function i2ccmd(addr: number, value: number) {
+    let buf = pins.createBuffer(1)
+    buf[0] = value
+    pins.i2cWriteBuffer(addr, buf)
+}
 
+function i2cread(addr: number, reg: number) {
+    pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+    let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
+    return val;
+}
 
+function setFreq(addr: number, freq: number): void {
+    let prescaleval = 25000000.0;
+    prescaleval /= 4096.0;
+    prescaleval /= freq;
+    prescaleval -= 1.0;
 
+    let prescale = Math.floor(prescaleval + 0.5);
+    let oldmode = i2cread(addr, MODE1);
+    let newmode = (oldmode & 0x7F) | 0x10; // sleep
+    i2cwrite(addr, MODE1, newmode);
+    i2cwrite(addr, PRESCALE, prescale);
+    i2cwrite(addr, MODE1, oldmode);
+    control.waitMicros(5000);
+    i2cwrite(addr, MODE1, oldmode | 0xa1); // auto-increment on
+}
 
-    function setFreq(freq: number): void {
-        // Constrain the frequency
-        let prescaleval = 25000000;
-        prescaleval /= 4096;
-        prescaleval /= freq;
-        prescaleval -= 1;
-        let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
-        let oldmode = i2cread(PCA9685_ADD, MODE1);
-        let newmode = (oldmode & 0x7F) | 0x10; // sleep
-        i2cwrite(PCA9685_ADD, MODE1, newmode); // go to sleep
-        i2cwrite(PCA9685_ADD, PRESCALE, prescale); // set the prescaler
-        i2cwrite(PCA9685_ADD, MODE1, oldmode);
-        control.waitMicros(5000);
-        i2cwrite(PCA9685_ADD, MODE1, oldmode | 0xa1);
-    }
-    function setPwm(channel: number, on: number, off: number): void {
-        if (channel < 0 || channel > 15)
-            return;
+function initPCA9685_1(): void {
+    i2cwrite(PCA9685_ADD, MODE1, 0x00)
+    setFreq(PCA9685_ADD, 1000);
+    initializedPCA1 = true;
+}
 
-        if (!initializedPCA1) {
-            initPCA9685_1();
-            setFreq(1000);
-        }
-         if (!initializedPCA2) {
-            initPCA9685_2();
-            setFreq(50);
-        }
+function initPCA9685_2(): void {
+    i2cwrite(PCA9685_ADD_2, MODE1, 0x00)
+    setFreq(PCA9685_ADD_2, 50);
+    initializedPCA2 = true;
+}
 
+function setPwm(addr: number, channel: number, on: number, off: number): void {
+    if (channel < 0 || channel > 15)
+        return;
 
+    let buf = pins.createBuffer(5);
+    buf[0] = LED0_ON_L + 4 * channel;
+    buf[1] = on & 0xff;
+    buf[2] = (on >> 8) & 0xff;
+    buf[3] = off & 0xff;
+    buf[4] = (off >> 8) & 0xff;
+    pins.i2cWriteBuffer(addr, buf);
+}
 
-        let buf = pins.createBuffer(5);
-        buf[0] = LED0_ON_L + 4 * channel;
-        buf[1] = on & 0xff;
-        buf[2] = (on >> 8) & 0xff;
-        buf[3] = off & 0xff;
-        buf[4] = (off >> 8) & 0xff;
-        pins.i2cWriteBuffer(PCA9685_ADD, buf);
-    }
 
     function stopMotor(index: enMotors) {
         setPwm(index, 0, 0);
