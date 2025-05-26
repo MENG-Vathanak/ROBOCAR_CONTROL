@@ -309,7 +309,7 @@ namespace RoboCar {
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
     export function RGB_Program(): neopixel.Strip {
         if (!yahStrip) {
-            yahStrip = neopixel.create(DigitalPin.P2, 4, NeoPixelMode.RGB);
+            yahStrip = neopixel.create(DigitalPin.P0, 4, NeoPixelMode.RGB);
         }
         return yahStrip;
     }
