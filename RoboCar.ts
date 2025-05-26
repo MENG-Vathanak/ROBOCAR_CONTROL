@@ -1,8 +1,6 @@
 //% color="#FFA500" weight=20 icon="\uf1b9"
 namespace RoboCar {
     const PCA9685_ADD = 0x40
-    const PCA9685_ADD_2 = 0x41
-
     const MODE1 = 0x00
     const MODE2 = 0x01
     const SUBADR1 = 0x02
@@ -19,9 +17,7 @@ namespace RoboCar {
     const ALL_LED_OFF_H = 0xFD
 
     const PRESCALE = 0xFE
-    let initializedPCA1 = false
-    let initializedPCA2 = false
-
+    let initialized = false
     let yahStrip: neopixel.Strip;
 
     export enum enMusic {
@@ -47,10 +43,10 @@ namespace RoboCar {
         power_down
     }
     export enum enServo {
-        S1 = 0,
-        S2 = 1,
-        S3 = 2,
-        S4 = 3,
+        S1 = 2,
+        S2 = 3,
+        S3 = 4,
+        S4 = 5,
     }
     export enum enMotors {
         M1 = 8,
@@ -95,21 +91,12 @@ namespace RoboCar {
         let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
         return val;
     }
-    function initPCA9685_1(): void {
+    function initPCA9685(): void {
         i2cwrite(PCA9685_ADD, MODE1, 0x00)
-        setFreq(1000);
-        initializedPCA1 = true
-    }
-
-      function initPCA9685_2(): void {
-        i2cwrite(PCA9685_ADD_2, MODE1, 0x00)
         setFreq(50);
-        initializedPCA2 = true
+        initialized = true
     }
-
-//Corrected 1
-
-    function setFreq1(freq: number): void {
+    function setFreq(freq: number): void {
         // Constrain the frequency
         let prescaleval = 25000000;
         prescaleval /= 4096;
@@ -124,31 +111,12 @@ namespace RoboCar {
         control.waitMicros(5000);
         i2cwrite(PCA9685_ADD, MODE1, oldmode | 0xa1);
     }
- function setFreq2(freq: number): void {
-        // Constrain the frequency
-        let prescaleval = 25000000;
-        prescaleval /= 4096;
-        prescaleval /= freq;
-        prescaleval -= 1;
-        let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
-        let oldmode = i2cread(PCA9685_ADD_2, MODE1);
-        let newmode = (oldmode & 0x7F) | 0x10; // sleep
-        i2cwrite(PCA9685_ADD_2, MODE1, newmode); // go to sleep
-        i2cwrite(PCA9685_ADD_2, PRESCALE, prescale); // set the prescaler
-        i2cwrite(PCA9685_ADD_2, MODE1, oldmode);
-        control.waitMicros(5000);
-        i2cwrite(PCA9685_ADD_2, MODE1, oldmode | 0xa1);
-    }
-
-
-
-    function setPwm1(channel: number, on: number, off: number): void {
+    function setPwm(channel: number, on: number, off: number): void {
         if (channel < 0 || channel > 15)
             return;
-
-        if (!initializedPCA1) {
-            initPCA9685_1();
-            setFreq1(1000);
+        if (!initialized) {
+            initPCA9685();
+            setFreq(1000);
         }
         let buf = pins.createBuffer(5);
         buf[0] = LED0_ON_L + 4 * channel;
@@ -158,45 +126,21 @@ namespace RoboCar {
         buf[4] = (off >> 8) & 0xff;
         pins.i2cWriteBuffer(PCA9685_ADD, buf);
     }
-
-
-    function setPwm2(channel: number, on: number, off: number): void {
-        if (channel < 0 || channel > 15)
-            return;
-
-        if (!initializedPCA2) {
-            initPCA9685_2();
-            setFreq2(50);
-        }
-        let buf = pins.createBuffer(5);
-        buf[0] = LED0_ON_L + 4 * channel;
-        buf[1] = on & 0xff;
-        buf[2] = (on >> 8) & 0xff;
-        buf[3] = off & 0xff;
-        buf[4] = (off >> 8) & 0xff;
-        pins.i2cWriteBuffer(PCA9685_ADD_2, buf);
-    }
-
-
-
-
     function stopMotor(index: enMotors) {
-        setPwm1(index, 0, 0);
+        setPwm(index, 0, 0);
     }
-
     function forward(RoboCarSpeed: number) {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P9, 0)
-        pins.digitalWritePin(DigitalPin.P10, 1)
+        pins.digitalWritePin(DigitalPin.P8, 1)
 
         setPwm(enMotors.M2, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P15, 1)
         pins.digitalWritePin(DigitalPin.P16, 0)
 
         setPwm(enMotors.M3, 0, RoboCarSpeed)
-        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P10, 0)
         pins.digitalWritePin(DigitalPin.P12, 1)
-
         setPwm(enMotors.M4, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P13, 1)
         pins.digitalWritePin(DigitalPin.P14, 0)
@@ -307,8 +251,7 @@ namespace RoboCar {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P9, 0)
         pins.digitalWritePin(DigitalPin.P10, 1)
-
-        setPwm(enMotors.M2, 0, 0)
+setPwm(enMotors.M2, 0, 0)
         pins.digitalWritePin(DigitalPin.P15, 0)
         pins.digitalWritePin(DigitalPin.P16, 0)
 
@@ -354,10 +297,10 @@ namespace RoboCar {
         pins.digitalWritePin(DigitalPin.P13, 0)
         pins.digitalWritePin(DigitalPin.P14, 0)
     }
-    /**
-    * *****************************************************************
-     * @param index
-     */
+    // /
+    // * *****************************************************************
+    //  * @param index
+    //  */
     //% blockId=RoboCar_RGB_Program block="RGB_Program"
     //% weight=99
     //% blockGap=10
@@ -389,7 +332,8 @@ namespace RoboCar {
             case enMusic.baddy: music.beginMelody(music.builtInMelody(Melodies.Baddy), MelodyOptions.Once); break;
             case enMusic.chase: music.beginMelody(music.builtInMelody(Melodies.Chase), MelodyOptions.Once); break;
             case enMusic.ba_ding: music.beginMelody(music.builtInMelody(Melodies.BaDing), MelodyOptions.Once); break;
-            case enMusic.wawawawaa: music.beginMelody(music.builtInMelody(Melodies.Wawawawaa), MelodyOptions.Once); break;
+            case enMusic.wawawaw
+aa: music.beginMelody(music.builtInMelody(Melodies.Wawawawaa), MelodyOptions.Once); break;
             case enMusic.jump_up: music.beginMelody(music.builtInMelody(Melodies.JumpUp), MelodyOptions.Once); break;
             case enMusic.jump_down: music.beginMelody(music.builtInMelody(Melodies.JumpDown), MelodyOptions.Once); break;
             case enMusic.power_up: music.beginMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.Once); break;
@@ -403,13 +347,13 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=180
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo(num: enServo, value: number): void {
-        if (!initializedPCA2) {
-            initPCA9685_2();
+        if (!initialized) {
+            initPCA9685();
         }
         // 50hz: 20,000 us
         let us = (value * 1800 / 180 + 600); // 0.6 ~ 2.4
         let pwm = us * 4096 / 20000;
-        setPwm2(num, 0, pwm);
+        setPwm(num, 0, pwm);
     }
     //% blockId=RoboCar_Servo2 block="SERVO(270°)|%num|degree %value"
     //% weight=96
@@ -417,14 +361,14 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=270
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo2(num: enServo, value: number): void {
-        if (!initializedPCA2) {
-            initPCA9685_2();
+        if (!initialized) {
+            initPCA9685();
         }
         // 50hz: 20,000 us
         let newvalue = Math.map(value, 0, 270, 0, 180);
         let us = (newvalue * 1800 / 180 + 600); // 0.6 ~ 2.4
         let pwm = us * 4096 / 20000;
-        setPwm2(num, 0, pwm);
+        setPwm(num, 0, pwm);
     }
     //% blockId=RoboCar_MotorRun block="Motor|%index|speed %speed"
     //% weight=93
@@ -561,13 +505,13 @@ namespace RoboCar {
         MotorRun(enMotors.M3, speed3);
         MotorRun(enMotors.M4, speed4);
     }
-    /**
-    * Send a ping and get the echo time (in microseconds) as a result
-    * @param trig trigger pin
-    * @param echo echo pin
-    * @param unit desired conversion unit
-    * @param maxCmDistance maximum distance in centimeters (default is 500)
-    */
+    // /
+    // * Send a ping and get the echo time (in microseconds) as a result
+    // * @param trig trigger pin
+    // * @param echo echo pin
+    // * @param unit desired conversion unit
+    // * @param maxCmDistance maximum distance in centimeters (default is 500)
+    // */
     //% weight=10 
     //% blockId=sonar_ping block="ping trig %trig|echo %echo|unit %unit"
     export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
