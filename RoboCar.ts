@@ -131,16 +131,16 @@ namespace RoboCar {
     }
     function forward(RoboCarSpeed: number) {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
-        pins.digitalWritePin(DigitalPin.P9, 0)
-        pins.digitalWritePin(DigitalPin.P8, 1)
+        pins.digitalWritePin(DigitalPin.P8, 0)
+        pins.digitalWritePin(DigitalPin.P9, 1)
 
         setPwm(enMotors.M2, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P15, 1)
         pins.digitalWritePin(DigitalPin.P16, 0)
 
         setPwm(enMotors.M3, 0, RoboCarSpeed)
-        pins.digitalWritePin(DigitalPin.P12, 0)
-        pins.digitalWritePin(DigitalPin.P10, 1)
+        pins.digitalWritePin(DigitalPin.P10, 0)
+        pins.digitalWritePin(DigitalPin.P12, 1)
 
         setPwm(enMotors.M4, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P13, 1)
@@ -148,8 +148,8 @@ namespace RoboCar {
     }
     function backward(RoboCarSpeed: number) {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
-        pins.digitalWritePin(DigitalPin.P9, 1)
-        pins.digitalWritePin(DigitalPin.P8, 0)
+        pins.digitalWritePin(DigitalPin.P8, 1)
+        pins.digitalWritePin(DigitalPin.P9, 0)
 
         setPwm(enMotors.M2, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P15, 0)
