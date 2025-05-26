@@ -1,6 +1,8 @@
 //% color="#FFA500" weight=20 icon="\uf1b9"
 namespace RoboCar {
     const PCA9685_ADD = 0x40
+    const PCA9685_ADD_2 = 0x41
+
     const MODE1 = 0x00
     const MODE2 = 0x01
     const SUBADR1 = 0x02
@@ -17,7 +19,9 @@ namespace RoboCar {
     const ALL_LED_OFF_H = 0xFD
 
     const PRESCALE = 0xFE
-    let initialized = false
+    let initializedPCA1 = false
+    let initializedPCA2 = false
+
     let yahStrip: neopixel.Strip;
 
     export enum enMusic {
@@ -43,10 +47,10 @@ namespace RoboCar {
         power_down
     }
     export enum enServo {
-        S1 = 2,
-        S2 = 3,
-        S3 = 4,
-        S4 = 5,
+        S1 = 0,
+        S2 = 1,
+        S3 = 2,
+        S4 = 3,
     }
     export enum enMotors {
         M1 = 8,
@@ -91,11 +95,22 @@ namespace RoboCar {
         let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
         return val;
     }
-    function initPCA9685(): void {
+    function initPCA9685_1(): void {
         i2cwrite(PCA9685_ADD, MODE1, 0x00)
-        setFreq(50);
-        initialized = true
+        setFreq(1000);
+        initializedPCA1 = true
     }
+
+      function initPCA9685_2(): void {
+        i2cwrite(PCA9685_ADD_2, MODE1, 0x00)
+        setFreq(50);
+        initializedPCA2 = true
+    }
+
+
+
+
+
     function setFreq(freq: number): void {
         // Constrain the frequency
         let prescaleval = 25000000;
@@ -114,10 +129,18 @@ namespace RoboCar {
     function setPwm(channel: number, on: number, off: number): void {
         if (channel < 0 || channel > 15)
             return;
-        if (!initialized) {
-            initPCA9685();
+
+        if (!initializedPCA1) {
+            initPCA9685_1();
             setFreq(1000);
         }
+         if (!initializedPCA2) {
+            initPCA9685_2();
+            setFreq(50);
+        }
+
+
+
         let buf = pins.createBuffer(5);
         buf[0] = LED0_ON_L + 4 * channel;
         buf[1] = on & 0xff;
@@ -126,9 +149,11 @@ namespace RoboCar {
         buf[4] = (off >> 8) & 0xff;
         pins.i2cWriteBuffer(PCA9685_ADD, buf);
     }
+
     function stopMotor(index: enMotors) {
         setPwm(index, 0, 0);
     }
+
     function forward(RoboCarSpeed: number) {
         setPwm(enMotors.M1, 0, RoboCarSpeed)
         pins.digitalWritePin(DigitalPin.P9, 0)
@@ -348,8 +373,8 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=180
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo(num: enServo, value: number): void {
-        if (!initialized) {
-            initPCA9685();
+        if (!initializedPCA2) {
+            initPCA9685_2();
         }
         // 50hz: 20,000 us
         let us = (value * 1800 / 180 + 600); // 0.6 ~ 2.4
@@ -362,8 +387,8 @@ namespace RoboCar {
     //% num.min=1 num.max=4 value.min=0 value.max=270
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=20
     export function Servo2(num: enServo, value: number): void {
-        if (!initialized) {
-            initPCA9685();
+        if (!initializedPCA2) {
+            initPCA9685_2();
         }
         // 50hz: 20,000 us
         let newvalue = Math.map(value, 0, 270, 0, 180);
